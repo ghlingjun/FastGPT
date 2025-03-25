@@ -15,6 +15,10 @@ const ChatSchema = new Schema({
     type: String,
     require: true
   },
+  customUid: {
+    type: String,
+    require: true
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'user'

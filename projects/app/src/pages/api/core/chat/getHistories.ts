@@ -49,7 +49,8 @@ async function handler(
       return {
         tmbId,
         appId,
-        customUid,
+        // customUid,
+        outLinkUid: customUid,
         source
       };
     }
@@ -63,7 +64,10 @@ async function handler(
   }
 
   const [data, total] = await Promise.all([
-    await MongoChat.find(match, 'chatId title top customTitle appId updateTime')
+    await MongoChat.find(
+      match,
+      'chatId title top customTitle appId updateTime outLinkUid customUid'
+    )
       .sort({ top: -1, updateTime: -1 })
       .skip(offset)
       .limit(pageSize)
@@ -74,6 +78,8 @@ async function handler(
   return {
     list: data.map((item) => ({
       chatId: item.chatId,
+      customUid: item.customUid,
+      outLinkUid: item.outLinkUid,
       updateTime: item.updateTime,
       appId: item.appId,
       customTitle: item.customTitle,
