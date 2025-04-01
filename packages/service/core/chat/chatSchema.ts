@@ -88,6 +88,8 @@ const ChatSchema = new Schema({
 
 try {
   ChatSchema.index({ chatId: 1 });
+  // 增加自定义uid索引
+  ChatSchema.index({ chatId: 1, customUid: 1 });
   // get user history
   ChatSchema.index({ tmbId: 1, appId: 1, top: -1, updateTime: -1 });
   // delete by appid; clear history; init chat; update chat; auth chat; get chat;

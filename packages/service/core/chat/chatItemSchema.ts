@@ -91,6 +91,8 @@ const ChatItemSchema = new Schema({
 
 try {
   ChatItemSchema.index({ dataId: 1 });
+  // 增加自定义uid索引
+  ChatItemSchema.index({ chatId: 1, customUid: 1 });
   /* delete by app; 
      delete by chat id;
      get chat list; 
