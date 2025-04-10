@@ -11,6 +11,8 @@ type State = {
 
   appId: string;
   setAppId: (e: string) => any;
+  customUid?: string;
+  setCustomUid: (e: string) => any;
   lastChatAppId: string;
   setLastChatAppId: (e: string) => any;
 
@@ -83,12 +85,20 @@ export const useChatStore = create<State>()(
           });
         },
         appId: '',
+        customUid: '',
         setAppId(e) {
           if (!e) return;
 
           set((state) => {
             state.appId = e;
             state.lastChatAppId = e;
+          });
+        },
+        setCustomUid(e: string) {
+          if (!e) return;
+          set((state) => {
+            state.customUid = e;
+            // state.lastCustomUid = e;
           });
         },
         lastChatId: '',

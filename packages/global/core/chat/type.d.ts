@@ -24,7 +24,7 @@ export type ChatSchema = {
   userId: string;
   teamId: string;
   tmbId: string;
-  customUid: string;
+  customUid?: string;
   appId: string;
   updateTime: Date;
   title: string;

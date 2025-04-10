@@ -8,12 +8,12 @@ defaultContentLanguage = 'zh-cn'
 defaultContentLanguageInSubdir = false
 [languages]
   [languages.zh-cn]
-    title = "高新数科"
+    title = "高新大模型应用平台"
     languageName = "简体中文"
     contentDir = "content/zh-cn"
     weight = 10
   [languages.en]
-    title = "高新数科 Docs"
+    title = "高新大模型应用平台 Docs"
     languageName = "English"
     contentDir = "content/en"
     weight = 10

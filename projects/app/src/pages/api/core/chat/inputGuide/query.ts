@@ -10,7 +10,7 @@ import { replaceRegChars } from '@fastgpt/global/common/string/tools';
 
 export type QueryChatInputGuideBody = OutLinkChatAuthProps & {
   appId: string;
-  customUid: string;
+  customUid?: string;
   searchKey: string;
 };
 export type QueryChatInputGuideResponse = string[];

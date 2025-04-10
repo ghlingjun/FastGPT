@@ -66,7 +66,7 @@ export type GetHistoriesProps = OutLinkChatAuthProps & {
 
 export type UpdateHistoryProps = OutLinkChatAuthProps & {
   appId: string;
-  customUid: string;
+  customUid?: string;
   chatId: string;
   title?: string;
   customTitle?: string;
@@ -90,7 +90,7 @@ export type DeleteChatItemProps = OutLinkChatAuthProps & {
 
 export type AdminUpdateFeedbackParams = AdminFbkType & {
   appId: string;
-  customUid: string;
+  customUid?: string;
   chatId: string;
   dataId: string;
 };

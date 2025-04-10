@@ -53,7 +53,7 @@ export type Props = {
   edges: StoreEdgeItemType[];
   variables: Record<string, any>;
   appId: string;
-  customUid: string;
+  customUid?: string;
   appName: string;
   chatId: string;
   chatConfig: AppChatConfigType;

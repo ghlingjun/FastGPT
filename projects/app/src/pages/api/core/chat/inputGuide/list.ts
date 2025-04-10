@@ -10,7 +10,7 @@ import { parsePaginationRequest } from '@fastgpt/service/common/api/pagination';
 
 export type ChatInputGuideProps = PaginationProps<{
   appId: string;
-  customUid: string;
+  customUid?: string;
   searchKey: string;
 }>;
 export type ChatInputGuideResponse = PaginationResponse<ChatInputGuideSchemaType>;
