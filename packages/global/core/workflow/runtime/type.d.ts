@@ -22,6 +22,7 @@ import { UserSelectOptionType } from '../template/system/userSelect/type';
 import { WorkflowResponseType } from '../../../../service/core/workflow/dispatch/type';
 import { AiChatQuoteRoleType } from '../template/system/aiChat/type';
 import { LafAccountType, OpenaiAccountType } from '../../../support/user/team/type';
+import { CompletionFinishReason } from '../../ai/type';
 
 export type ExternalProviderType = {
   openaiAccount?: OpenaiAccountType;
@@ -40,6 +41,7 @@ export type ChatDispatchProps = {
     id: string; // May be the id of the system plug-in (cannot be used directly to look up the table)
     teamId: string;
     tmbId: string; // App tmbId
+    isChildApp?: boolean;
   };
   runningUserInfo: {
     teamId: string;
@@ -58,6 +60,7 @@ export type ChatDispatchProps = {
   isToolCall?: boolean;
   workflowStreamResponse?: WorkflowResponseType;
   workflowDispatchDeep?: number;
+  version?: 'v1' | 'v2';
 };
 
 export type ModuleDispatchProps<T> = ChatDispatchProps & {
@@ -128,6 +131,7 @@ export type DispatchNodeResponseType = {
     obj: `${ChatRoleEnum}`;
     value: string;
   }[]; // completion context array. history will slice
+  finishReason?: CompletionFinishReason;
 
   // dataset search
   similarity?: number;

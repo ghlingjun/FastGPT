@@ -6,10 +6,13 @@ import { SseResponseEventEnum } from '@fastgpt/global/core/workflow/runtime/cons
 import { textAdaptGptResponse } from '@fastgpt/global/core/workflow/runtime/utils';
 import { parseReasoningContent, parseReasoningStreamContent } from '../../../ai/utils';
 import { createChatCompletion } from '../../../ai/config';
-import type { ChatCompletionMessageParam, StreamChatType } from '@fastgpt/global/core/ai/type.d';
+import type {
+  ChatCompletionMessageParam,
+  CompletionFinishReason,
+  StreamChatType
+} from '@fastgpt/global/core/ai/type.d';
 import { formatModelChars2Points } from '../../../../support/wallet/usage/utils';
 import type { LLMModelItemType } from '@fastgpt/global/core/ai/model.d';
-import { postTextCensor } from '../../../../common/api/requestPlusApi';
 import { ChatCompletionRequestMessageRoleEnum } from '@fastgpt/global/core/ai/constants';
 import type {
   ChatDispatchProps,
@@ -24,10 +27,9 @@ import {
   runtimePrompt2ChatsValue
 } from '@fastgpt/global/core/chat/adapt';
 import {
-  Prompt_DocumentQuote,
-  Prompt_userQuotePromptList,
-  Prompt_QuoteTemplateList,
-  Prompt_systemQuotePromptList
+  getQuoteTemplate,
+  getQuotePrompt,
+  getDocumentQuotePrompt
 } from '@fastgpt/global/core/ai/prompt/AIChat';
 import type { AIChatNodeProps } from '@fastgpt/global/core/workflow/runtime/type.d';
 import { replaceVariable } from '@fastgpt/global/common/string/tools';
@@ -48,6 +50,7 @@ import { getFileContentFromLinks, getHistoryFileLinks } from '../tools/readFiles
 import { parseUrlToFileType } from '@fastgpt/global/common/file/tools';
 import { i18nT } from '../../../../../web/i18n/utils';
 import { ModelTypeEnum } from '@fastgpt/global/core/ai/model';
+import { postTextCensor } from '../../../chat/postTextCensor';
 
 export type ChatProps = ModuleDispatchProps<
   AIChatNodeProps & {
@@ -70,7 +73,7 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
     stream = false,
     externalProvider,
     histories,
-    node: { name },
+    node: { name, version },
     query,
     runningUserInfo,
     workflowStreamResponse,
@@ -102,7 +105,7 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
 
   const modelConstantsData = getLLMModel(model);
   if (!modelConstantsData) {
-    return Promise.reject('The chat model is undefined, you need to select a chat model.');
+    return Promise.reject(`Mode ${model} is undefined, you need to select a chat model.`);
   }
 
   aiChatVision = modelConstantsData.vision && aiChatVision;
@@ -115,7 +118,7 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
     filterDatasetQuote({
       quoteQA,
       model: modelConstantsData,
-      quoteTemplate
+      quoteTemplate: quoteTemplate || getQuoteTemplate(version)
     }),
     getMultiInput({
       histories: chatHistories,
@@ -147,6 +150,7 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
       datasetQuoteText,
       aiChatQuoteRole,
       datasetQuotePrompt: quotePrompt,
+      version,
       userChatInput,
       systemPrompt,
       userFiles,
@@ -195,16 +199,17 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
     }
   });
 
-  const { answerText, reasoningText } = await (async () => {
+  const { answerText, reasoningText, finish_reason } = await (async () => {
     if (isStreamResponse) {
       if (!res) {
         return {
           answerText: '',
-          reasoningText: ''
+          reasoningText: '',
+          finish_reason: 'close' as const
         };
       }
       // sse response
-      const { answer, reasoning } = await streamResponse({
+      const { answer, reasoning, finish_reason } = await streamResponse({
         res,
         stream: response,
         aiChatReasoning,
@@ -215,9 +220,12 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
 
       return {
         answerText: answer,
-        reasoningText: reasoning
+        reasoningText: reasoning,
+        finish_reason
       };
     } else {
+      const finish_reason = response.choices?.[0]?.finish_reason as CompletionFinishReason;
+
       const { content, reasoningContent } = (() => {
         const content = response.choices?.[0]?.message?.content || '';
         // @ts-ignore
@@ -260,7 +268,8 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
 
       return {
         answerText: content,
-        reasoningText: reasoningContent
+        reasoningText: reasoningContent,
+        finish_reason
       };
     }
   })();
@@ -303,7 +312,8 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
       maxToken: max_tokens,
       reasoningText,
       historyPreview: getHistoryPreview(chatCompleteMessages, 10000, aiChatVision),
-      contextTotalLen: completeMessages.length
+      contextTotalLen: completeMessages.length,
+      finishReason: finish_reason
     },
     [DispatchNodeResponseKeyEnum.nodeDispatchUsages]: [
       {
@@ -326,10 +336,10 @@ async function filterDatasetQuote({
 }: {
   quoteQA: ChatProps['params']['quoteQA'];
   model: LLMModelItemType;
-  quoteTemplate?: string;
+  quoteTemplate: string;
 }) {
   function getValue(item: SearchDataResponseItemType, index: number) {
-    return replaceVariable(quoteTemplate || Prompt_QuoteTemplateList[0].value, {
+    return replaceVariable(quoteTemplate, {
       id: item.id,
       q: item.q,
       a: item.a,
@@ -425,6 +435,7 @@ async function getChatMessages({
   datasetQuotePrompt = '',
   datasetQuoteText,
   useDatasetQuote,
+  version,
   histories = [],
   systemPrompt,
   userChatInput,
@@ -437,6 +448,7 @@ async function getChatMessages({
   aiChatQuoteRole: AiChatQuoteRoleType; // user: replace user prompt; system: replace system prompt
   datasetQuotePrompt?: string;
   datasetQuoteText: string;
+  version: string;
 
   useDatasetQuote: boolean;
   histories: ChatItemType[];
@@ -451,11 +463,7 @@ async function getChatMessages({
   const quoteRole =
     aiChatQuoteRole === 'user' || datasetQuotePrompt.includes('{{question}}') ? 'user' : 'system';
 
-  const datasetQuotePromptTemplate = datasetQuotePrompt
-    ? datasetQuotePrompt
-    : quoteRole === 'user'
-      ? Prompt_userQuotePromptList[0].value
-      : Prompt_systemQuotePromptList[0].value;
+  const datasetQuotePromptTemplate = datasetQuotePrompt || getQuotePrompt(version, quoteRole);
 
   // Reset user input, add dataset quote to user input
   const replaceInputValue =
@@ -477,7 +485,7 @@ async function getChatMessages({
         })
       : '',
     documentQuoteText
-      ? replaceVariable(Prompt_DocumentQuote, {
+      ? replaceVariable(getDocumentQuotePrompt(version), {
           quote: documentQuoteText
         })
       : ''
@@ -530,15 +538,18 @@ async function streamResponse({
   });
   let answer = '';
   let reasoning = '';
+  let finish_reason: CompletionFinishReason = null;
   const { parsePart, getStartTagBuffer } = parseReasoningStreamContent();
 
   for await (const part of stream) {
     if (res.closed) {
       stream.controller?.abort();
+      finish_reason = 'close';
       break;
     }
 
-    const [reasoningContent, content] = parsePart(part, parseThinkTag);
+    const { reasoningContent, content, finishReason } = parsePart(part, parseThinkTag);
+    finish_reason = finish_reason || finishReason;
     answer += content;
     reasoning += reasoningContent;
 
@@ -577,5 +588,5 @@ async function streamResponse({
     }
   }
 
-  return { answer, reasoning };
+  return { answer, reasoning, finish_reason };
 }
