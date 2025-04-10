@@ -3,7 +3,7 @@ import { NextAPI } from '@/service/middleware/entry';
 import { MongoChatInputGuide } from '@fastgpt/service/core/chat/inputGuide/schema';
 import { authCert } from '@fastgpt/service/support/permission/auth/common';
 
-export type countChatInputGuideTotalQuery = { appId: string; customUid: string };
+export type countChatInputGuideTotalQuery = { appId: string; customUid?: string };
 
 export type countChatInputGuideTotalBody = {};
 

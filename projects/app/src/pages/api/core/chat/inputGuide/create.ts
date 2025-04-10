@@ -8,7 +8,7 @@ export type createChatInputGuideQuery = {};
 
 export type createInputGuideBody = {
   appId: string;
-  customUid: string;
+  customUid?: string;
   textList: string[];
 };
 

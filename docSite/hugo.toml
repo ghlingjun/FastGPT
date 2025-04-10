@@ -8,12 +8,12 @@ defaultContentLanguage = 'zh-cn'
 defaultContentLanguageInSubdir = false
 [languages]
   [languages.zh-cn]
-    title = "FastGPT"
+    title = "高新数科"
     languageName = "简体中文"
     contentDir = "content/zh-cn"
     weight = 10
   [languages.en]
-    title = "FastGPT Docs"
+    title = "高新数科 Docs"
     languageName = "English"
     contentDir = "content/en"
     weight = 10

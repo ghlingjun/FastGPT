@@ -8,7 +8,7 @@ export type updateChatInputGuideQuery = {};
 
 export type updateInputGuideBody = {
   appId: string;
-  customUid: string;
+  customUid?: string;
   dataId: string;
   text: string;
 };
