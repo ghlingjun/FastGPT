@@ -17,6 +17,7 @@ import { ChatBoxContext } from '../ChatContainer/ChatBox/Provider';
 import { useRequest2 } from '@fastgpt/web/hooks/useRequest';
 import { getFileIcon } from '@fastgpt/global/common/file/icon';
 import EmptyTip from '@fastgpt/web/components/common/EmptyTip';
+import { completionFinishReasonMap } from '@fastgpt/global/core/ai/constants';
 
 type sideTabItemType = {
   moduleLogo?: string;
@@ -196,6 +197,13 @@ export const WholeResponseContent = ({
           label={t('common:core.chat.response.module maxToken')}
           value={activeModule?.maxToken}
         />
+        {activeModule?.finishReason && (
+          <Row
+            label={t('chat:completion_finish_reason')}
+            value={t(completionFinishReasonMap[activeModule?.finishReason])}
+          />
+        )}
+
         <Row label={t('chat:reasoning_text')} value={activeModule?.reasoningText} />
         <Row
           label={t('common:core.chat.response.module historyPreview')}
@@ -250,22 +258,24 @@ export const WholeResponseContent = ({
           value={activeModule?.similarity}
         />
         <Row label={t('common:core.chat.response.module limit')} value={activeModule?.limit} />
-        <Row
-          label={t('common:core.chat.response.search using reRank')}
-          rawDom={
-            <Box border={'base'} borderRadius={'md'} p={2}>
-              {activeModule?.searchUsingReRank ? (
-                activeModule?.rerankModel ? (
-                  <Box>{`${activeModule.rerankModel}: ${activeModule.rerankWeight}`}</Box>
+        {activeModule?.searchUsingReRank !== undefined && (
+          <Row
+            label={t('common:core.chat.response.search using reRank')}
+            rawDom={
+              <Box border={'base'} borderRadius={'md'} p={2}>
+                {activeModule?.searchUsingReRank ? (
+                  activeModule?.rerankModel ? (
+                    <Box>{`${activeModule.rerankModel}: ${activeModule.rerankWeight}`}</Box>
+                  ) : (
+                    'True'
+                  )
                 ) : (
-                  'True'
-                )
-              ) : (
-                `False`
-              )}
-            </Box>
-          }
-        />
+                  `False`
+                )}
+              </Box>
+            }
+          />
+        )}
         {activeModule.queryExtensionResult && (
           <>
             <Row

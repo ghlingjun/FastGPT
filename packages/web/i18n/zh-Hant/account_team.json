@@ -18,8 +18,10 @@
   "delete": "刪除",
   "delete_org": "刪除部門",
   "edit_info": "編輯訊息",
+  "edit_member": "編輯用戶",
+  "edit_member_tip": "成員名",
   "edit_org_info": "編輯部門資訊",
-  "expires": "有效期",
+  "expires": "過期時間",
   "forbid_hint": "停用後，該邀請連結將失效。 該操作不可撤銷，是否確認停用？",
   "forbid_success": "停用成功",
   "forbidden": "停用",
@@ -29,6 +31,7 @@
   "has_forbidden": "已失效",
   "has_invited": "已邀請",
   "ignore": "忽略",
+  "invitation_copy_link": "【{{systemName}}】 {{userName}} 邀請您加入{{teamName}}團隊，連結：{{url}}",
   "invitation_link_auto_clean_hint": "已失效連結將在30天後自動清理",
   "invitation_link_description": "連結描述",
   "invitation_link_list": "連結列表",
@@ -59,5 +62,12 @@
   "user_team_leave_team": "離開團隊",
   "user_team_leave_team_failed": "離開團隊失敗",
   "waiting": "待接受",
-  "invitation_copy_link": "【{{systemName}}】 {{userName}} 邀請您加入{{teamName}}團隊，連結：{{url}}"
+  "permission_appCreate": "建立應用",
+  "permission_datasetCreate": "建立知識庫",
+  "permission_apikeyCreate": "建立 API 密鑰",
+  "permission_appCreate_tip": "可以在根目錄建立應用，（資料夾下的建立權限由資料夾控制）",
+  "permission_datasetCreate_Tip": "可以在根目錄建立知識庫，（資料夾下的建立權限由資料夾控制）",
+  "permission_apikeyCreate_Tip": "可以建立全域的 APIKey",
+  "permission_manage": "管理員",
+  "permission_manage_tip": "可以管理成員、建立群組、管理所有群組、為群組和成員分配權限"
 }
