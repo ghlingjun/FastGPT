@@ -23,7 +23,8 @@ import { WorkflowResponseType } from '../../../../service/core/workflow/dispatch
 import { AiChatQuoteRoleType } from '../template/system/aiChat/type';
 import { LafAccountType, OpenaiAccountType } from '../../../support/user/team/type';
 import { CompletionFinishReason } from '../../ai/type';
-
+import { WorkflowInteractiveResponseType } from '../template/system/interactive/type';
+import { SearchDataResponseItemType } from '../../dataset/type';
 export type ExternalProviderType = {
   openaiAccount?: OpenaiAccountType;
   externalWorkflowVariables?: Record<string, string>;
@@ -55,12 +56,17 @@ export type ChatDispatchProps = {
   variables: Record<string, any>; // global variable
   query: UserChatItemValueItemType[]; // trigger query
   chatConfig: AppSchema['chatConfig'];
+  lastInteractive?: WorkflowInteractiveResponseType; // last interactive response
   stream: boolean;
+  retainDatasetCite?: boolean;
   maxRunTimes: number;
   isToolCall?: boolean;
   workflowStreamResponse?: WorkflowResponseType;
   workflowDispatchDeep?: number;
   version?: 'v1' | 'v2';
+
+  responseAllData?: boolean;
+  responseDetail?: boolean;
 };
 
 export type ModuleDispatchProps<T> = ChatDispatchProps & {
@@ -134,12 +140,15 @@ export type DispatchNodeResponseType = {
   finishReason?: CompletionFinishReason;
 
   // dataset search
+  embeddingModel?: string;
+  embeddingTokens?: number;
   similarity?: number;
   limit?: number;
   searchMode?: `${DatasetSearchModeEnum}`;
   embeddingWeight?: number;
   rerankModel?: string;
   rerankWeight?: number;
+  reRankInputTokens?: number;
   searchUsingReRank?: boolean;
   queryExtensionResult?: {
     model: string;
@@ -178,7 +187,6 @@ export type DispatchNodeResponseType = {
   ifElseResult?: string;
 
   // tool
-  toolCallTokens?: number;
   toolCallInputTokens?: number;
   toolCallOutputTokens?: number;
   toolDetail?: ChatHistoryItemResType[];
@@ -214,6 +222,8 @@ export type DispatchNodeResponseType = {
 
   // tool params
   toolParamsResult?: Record<string, any>;
+
+  toolRes?: any;
 
   // abandon
   extensionModel?: string;
