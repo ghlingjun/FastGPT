@@ -73,7 +73,6 @@ const DetailLogsModal = ({ appId, chatId, onClose }: Props) => {
   return (
     <>
       <MyBox
-        isLoading={isFetching}
         display={'flex'}
         flexDirection={'column'}
         zIndex={3}
@@ -214,6 +213,7 @@ const Render = (props: Props) => {
       showRouteToAppDetail={true}
       showRouteToDatasetDetail={true}
       isShowReadRawSource={true}
+      isResponseDetail={true}
       // isShowFullText={true}
       showNodeStatus
     >

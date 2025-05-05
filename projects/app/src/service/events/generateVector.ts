@@ -9,7 +9,7 @@ import { MongoDatasetData } from '@fastgpt/service/core/dataset/data/schema';
 import {
   deleteDatasetDataVector,
   insertDatasetDataVector
-} from '@fastgpt/service/common/vectorStore/controller';
+} from '@fastgpt/service/common/vectorDB/controller';
 import { getEmbeddingModel } from '@fastgpt/service/core/ai/model';
 import { mongoSessionRun } from '@fastgpt/service/common/mongo/sessionRun';
 import { DatasetTrainingSchemaType } from '@fastgpt/global/core/dataset/type';
@@ -35,6 +35,8 @@ const reduceQueueAndReturn = (delay = 0) => {
 /* 索引生成队列。每导入一次，就是一个单独的线程 */
 export async function generateVector(): Promise<any> {
   const max = global.systemEnv?.vectorMaxProcess || 10;
+  addLog.debug(`[Vector Queue] Queue size: ${global.vectorQueueLen}`);
+
   if (global.vectorQueueLen >= max) return;
   global.vectorQueueLen++;
   const start = Date.now();

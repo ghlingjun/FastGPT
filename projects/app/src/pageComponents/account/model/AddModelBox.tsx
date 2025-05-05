@@ -127,11 +127,11 @@ export const ModelEditModal = ({
   );
 
   const priceUnit = useMemo(() => {
-    if (isLLMModel || isEmbeddingModel) return '/ 1k Tokens';
+    if (isLLMModel || isEmbeddingModel || isRerankModel) return '/ 1k Tokens';
     if (isTTSModel) return `/ 1k ${t('common:unit.character')}`;
     if (isSTTModel) return `/ 60 ${t('common:unit.seconds')}`;
     return '';
-  }, [isLLMModel, isEmbeddingModel, isTTSModel, t, isSTTModel]);
+  }, [isLLMModel, isEmbeddingModel, isTTSModel, t, isSTTModel, isRerankModel]);
 
   const { runAsync: updateModel, loading: updatingModel } = useRequest2(
     async (data: SystemModelItemType) => {
@@ -143,6 +143,7 @@ export const ModelEditModal = ({
           data[key] = '';
         }
       }
+
       return putSystemModel({
         model: data.model,
         metadata: data
@@ -356,7 +357,12 @@ export const ModelEditModal = ({
                       </Td>
                       <Td textAlign={'right'}>
                         <Flex justifyContent={'flex-end'}>
-                          <MyNumberInput register={register} name="maxResponse" {...InputStyles} />
+                          <MyNumberInput
+                            min={2000}
+                            register={register}
+                            name="maxResponse"
+                            {...InputStyles}
+                          />
                         </Flex>
                       </Td>
                     </Tr>
@@ -372,6 +378,7 @@ export const ModelEditModal = ({
                           <MyNumberInput
                             register={register}
                             name="maxTemperature"
+                            min={0}
                             step={0.1}
                             {...InputStyles}
                           />
@@ -484,7 +491,7 @@ export const ModelEditModal = ({
                             value={JSON.stringify(getValues('defaultConfig'), null, 2)}
                             onChange={(e) => {
                               if (!e) {
-                                setValue('defaultConfig', {});
+                                setValue('defaultConfig', undefined);
                                 return;
                               }
                               try {
@@ -572,19 +579,6 @@ export const ModelEditModal = ({
                     <Td textAlign={'right'}>
                       <Flex justifyContent={'flex-end'}>
                         <Switch {...register('toolChoice')} />
-                      </Flex>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <HStack spacing={1}>
-                        <Box>{t('account:model.function_call')}</Box>
-                        <QuestionTip label={t('account:model.function_call_tip')} />
-                      </HStack>
-                    </Td>
-                    <Td textAlign={'right'}>
-                      <Flex justifyContent={'flex-end'}>
-                        <Switch {...register('functionCall')} />
                       </Flex>
                     </Td>
                   </Tr>
@@ -714,12 +708,13 @@ export const ModelEditModal = ({
                         value={JSON.stringify(getValues('defaultConfig'), null, 2)}
                         resize
                         onChange={(e) => {
+                          console.log(e, '===');
                           if (!e) {
-                            setValue('defaultConfig', {});
+                            setValue('defaultConfig', undefined);
                             return;
                           }
                           try {
-                            setValue('defaultConfig', JSON.parse(e));
+                            setValue('defaultConfig', JSON.parse(e.trim()));
                           } catch (error) {
                             console.error(error);
                           }

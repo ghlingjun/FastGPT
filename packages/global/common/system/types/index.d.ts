@@ -49,6 +49,7 @@ export type FastGPTFeConfigsType = {
   find_password_method?: ['email' | 'phone'];
   bind_notification_method?: ['email' | 'phone'];
   googleClientVerKey?: string;
+  mcpServerProxyEndpoint?: string;
 
   show_emptyChat?: boolean;
   show_appStore?: boolean;
@@ -59,6 +60,7 @@ export type FastGPTFeConfigsType = {
   show_team_chat?: boolean;
   show_compliance_copywriting?: boolean;
   show_aiproxy?: boolean;
+  show_coupon?: boolean;
   concatMd?: string;
 
   concatMd?: string;
@@ -105,6 +107,12 @@ export type FastGPTFeConfigsType = {
   lafEnv?: string;
   navbarItems?: NavbarItemType[];
   externalProviderWorkflowVariables?: ExternalProviderWorkflowVarType[];
+
+  payConfig?: {
+    wx?: boolean;
+    alipay?: boolean;
+    bank?: boolean;
+  };
 };
 
 export type SystemEnvType = {
