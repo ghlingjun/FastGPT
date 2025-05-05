@@ -8,7 +8,6 @@ export type createChatInputGuideQuery = {};
 
 export type createInputGuideBody = {
   appId: string;
-  customUid?: string;
   textList: string[];
 };
 
@@ -20,14 +19,13 @@ async function handler(
   req: ApiRequestProps<createInputGuideBody, createChatInputGuideQuery>,
   res: ApiResponseType<any>
 ): Promise<createInputGuideResponse> {
-  const { appId, customUid, textList } = req.body;
+  const { appId, textList } = req.body;
   await authApp({ req, appId, authToken: true, per: WritePermissionVal });
 
   try {
     const result = await MongoChatInputGuide.insertMany(
       textList.map((text) => ({
         appId,
-        customUid,
         text
       })),
       {
