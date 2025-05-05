@@ -111,6 +111,7 @@ export type ChatItemSchema = (UserChatItemType | SystemChatItemType | AIChatItem
   tmbId: string;
   appId: string;
   time: Date;
+  durationSeconds?: number;
 };
 
 export type AdminFbkType = {
@@ -123,7 +124,6 @@ export type AdminFbkType = {
 
 /* --------- chat item ---------- */
 export type ResponseTagItemType = {
-  totalRunningTime?: number;
   totalQuoteList?: SearchDataResponseItemType[];
   llmModuleAccount?: number;
   historyPreviewLength?: number;
@@ -142,6 +142,7 @@ export type ChatSiteItemType = (UserChatItemType | SystemChatItemType | AIChatIt
   ttsBuffer?: Uint8Array;
   responseData?: ChatHistoryItemResType[];
   time?: Date;
+  durationSeconds?: number;
 } & ChatBoxInputType &
   ResponseTagItemType;
 

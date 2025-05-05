@@ -4,9 +4,9 @@ import {
   PatchIndexesProps,
   UpdateDatasetDataProps
 } from '@fastgpt/global/core/dataset/controller';
-import { insertDatasetDataVector } from '@fastgpt/service/common/vectorStore/controller';
+import { insertDatasetDataVector } from '@fastgpt/service/common/vectorDB/controller';
 import { jiebaSplit } from '@fastgpt/service/common/string/jieba/index';
-import { deleteDatasetDataVector } from '@fastgpt/service/common/vectorStore/controller';
+import { deleteDatasetDataVector } from '@fastgpt/service/common/vectorDB/controller';
 import { DatasetDataIndexItemType, DatasetDataItemType } from '@fastgpt/global/core/dataset/type';
 import { getEmbeddingModel, getLLMModel } from '@fastgpt/service/core/ai/model';
 import { mongoSessionRun } from '@fastgpt/service/common/mongo/sessionRun';
@@ -77,6 +77,7 @@ const formatIndexes = async ({
 
   // Recompute default indexes, Merge ids of the same index, reduce the number of rebuilds
   const defaultIndexes = getDefaultIndex({ q, a, indexSize });
+
   const concatDefaultIndexes = defaultIndexes.map((item) => {
     const oldIndex = indexes!.find((index) => index.text === item.text);
     if (oldIndex) {
