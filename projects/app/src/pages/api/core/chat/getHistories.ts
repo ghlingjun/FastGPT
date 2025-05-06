@@ -49,7 +49,6 @@ async function handler(
       return {
         tmbId,
         appId,
-        // customUid,
         outLinkUid: customUid,
         source
       };
