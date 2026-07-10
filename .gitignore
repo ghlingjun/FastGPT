@@ -18,7 +18,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local
+
 
 # vercel
 .vercel
@@ -40,3 +40,5 @@ coverage
 document/.source
 
 projects/app/worker/
+
+*.tar
