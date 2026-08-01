@@ -48,9 +48,11 @@ async function handler(
       };
     }
     if (appId && customUid) {
+      // customUid 在 completions 中写入为 outLinkUid
       return {
         appId,
-        customUid
+        outLinkUid: customUid,
+        ...(source && { source: Array.isArray(source) ? { $in: source } : source })
       };
     }
     if (appId && teamId && teamToken) {
@@ -67,7 +69,7 @@ async function handler(
       return {
         tmbId,
         appId,
-        ...(source && { source })
+        ...(source && { source: Array.isArray(source) ? { $in: source } : source })
       };
     }
   })();
