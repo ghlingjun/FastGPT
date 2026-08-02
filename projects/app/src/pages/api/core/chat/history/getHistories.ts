@@ -23,6 +23,7 @@ export async function handler(
     appId,
     shareId,
     outLinkUid,
+    customUid,
     teamId,
     teamToken,
     source,
@@ -43,6 +44,12 @@ export async function handler(
         updateTime: {
           $gte: addMonths(new Date(), -1)
         }
+      };
+    }
+    if (appId && customUid) {
+      return {
+        appId,
+        customUid
       };
     }
     if (appId && teamId && teamToken) {

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能体工作流引擎 V1.0 — 基于大语言模型的低代码智能体工作流构建系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <!-- 登录页 -->
+    <section id="view-login" class="view view-login active">
+      <div class="login-bg"></div>
+      <div class="login-card">
+        <div class="login-brand">
+          <div class="brand-mark">AW</div>
+          <div>
+            <h1>智能体工作流引擎</h1>
+            <p>基于大语言模型的低代码智能体工作流构建系统 V1.0</p>
+          </div>
+        </div>
+        <form id="login-form" class="login-form">
+          <label>账号
+            <input type="text" id="login-user" value="admin" required />
+          </label>
+          <label>密码
+            <input type="password" id="login-pass" value="••••••••" required />
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">进入工作台</button>
+        </form>
+        <p class="login-hint">演示账号已预填，点击即可进入系统原型</p>
+      </div>
+    </section>
+
+    <!-- 主工作台 -->
+    <section id="view-workspace" class="view view-workspace">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-mark sm">AW</div>
+          <div class="brand-text">
+            <strong>智能体工作流引擎</strong>
+            <span>V1.0</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav" id="main-nav">
+          <button class="nav-item active" data-page="dashboard">
+            <span class="nav-icon">◈</span>工作台总览
+          </button>
+          <button class="nav-item" data-page="agents">
+            <span class="nav-icon">◎</span>多智能体管理
+          </button>
+          <button class="nav-item" data-page="workflow">
+            <span class="nav-icon">⬡</span>工作流编排
+          </button>
+          <button class="nav-item" data-page="knowledge">
+            <span class="nav-icon">▣</span>私有知识库
+          </button>
+          <button class="nav-item" data-page="decision">
+            <span class="nav-icon">◆</span>动态决策风控
+          </button>
+          <button class="nav-item" data-page="publish">
+            <span class="nav-icon">↗</span>发布与集成
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-chip">
+            <span class="avatar">AD</span>
+            <div>
+              <strong>管理员</strong>
+              <small>政企演示租户</small>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-logout">退出</button>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <div class="breadcrumb" id="breadcrumb">工作台总览</div>
+          <div class="topbar-actions">
+            <div class="search-box">
+              <input type="search" placeholder="搜索智能体 / 工作流 / 知识库…" id="global-search" />
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-notify">通知 <span class="badge">3</span></button>
+          </div>
+        </header>
+
+        <div class="page-container" id="page-container">
+          <!-- pages injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- 通知抽屉 -->
+    <div class="drawer-overlay" id="notify-overlay"></div>
+    <aside class="drawer" id="notify-drawer">
+      <div class="drawer-head">
+        <h3>系统通知</h3>
+        <button class="btn btn-ghost btn-sm" id="close-notify">关闭</button>
+      </div>
+      <ul class="notify-list">
+        <li><strong>工作流「信贷初审」执行完成</strong><span>2 分钟前</span></li>
+        <li><strong>知识库「制度汇编」向量化完成</strong><span>15 分钟前</span></li>
+        <li><strong>人工确认节点待处理</strong><span>1 小时前</span></li>
+      </ul>
+    </aside>
+
+    <!-- 通用模态框 -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal" id="modal">
+      <div class="modal-head">
+        <h3 id="modal-title">标题</h3>
+        <button class="btn btn-ghost btn-sm" id="modal-close">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-foot" id="modal-foot"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-wrap" id="toast-wrap"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages-dashboard.js"></script>
+  <script src="js/pages-agents.js"></script>
+  <script src="js/pages-workflow.js"></script>
+  <script src="js/pages-knowledge.js"></script>
+  <script src="js/pages-decision.js"></script>
+  <script src="js/pages-publish.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
