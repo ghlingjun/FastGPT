@@ -8,6 +8,7 @@ import { PaginationSchema, PaginationResponseSchema } from '../../../api';
 export const GetHistoriesBodySchema = PaginationSchema.extend(OutLinkChatAuthSchema.shape).extend({
   appId: z.string().optional().describe('应用ID'),
   source: z.enum(ChatSourceEnum).optional().describe('对话来源'),
+  customUid: z.string().optional().describe('自定义用户UID'),
   startCreateTime: z.string().optional().describe('创建时间开始'),
   endCreateTime: z.string().optional().describe('创建时间结束'),
   startUpdateTime: z.string().optional().describe('更新时间开始'),
@@ -17,6 +18,7 @@ export type GetHistoriesBodyType = z.infer<typeof GetHistoriesBodySchema>;
 export const GetHistoriesResponseSchema = PaginationResponseSchema(
   z.object({
     chatId: z.string(),
+    customUid: z.string().optional().describe('自定义用户UID'),
     updateTime: z.date(),
     appId: z.string(),
     customTitle: z.string().optional(),

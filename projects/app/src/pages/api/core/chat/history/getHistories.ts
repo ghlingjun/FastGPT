@@ -23,6 +23,7 @@ export async function handler(
     appId,
     shareId,
     outLinkUid,
+    customUid,
     teamId,
     teamToken,
     source,
@@ -43,6 +44,14 @@ export async function handler(
         updateTime: {
           $gte: addMonths(new Date(), -1)
         }
+      };
+    }
+    if (appId && customUid) {
+      // customUid is persisted as outLinkUid when calling chat completions
+      await authCert({ req, authToken: true, authApiKey: true });
+      return {
+        appId,
+        outLinkUid: customUid
       };
     }
     if (appId && teamId && teamToken) {
@@ -94,7 +103,7 @@ export async function handler(
   const mergeMatch = { ...match, ...timeMatch, deleteTime: null };
 
   const [data, total] = await Promise.all([
-    await MongoChat.find(mergeMatch, 'chatId title top customTitle appId updateTime')
+    await MongoChat.find(mergeMatch, 'chatId outLinkUid title top customTitle appId updateTime')
       .sort({ top: -1, updateTime: -1 })
       .skip(offset)
       .limit(pageSize)
@@ -105,6 +114,7 @@ export async function handler(
   return GetHistoriesResponseSchema.parse({
     list: data.map((item) => ({
       chatId: item.chatId,
+      customUid: item.outLinkUid,
       updateTime: item.updateTime,
       appId: item.appId,
       customTitle: item.customTitle,
