@@ -24,6 +24,7 @@ async function handler(
     appId,
     shareId,
     outLinkUid,
+    customUid,
     teamId,
     teamToken,
     source,
@@ -46,6 +47,14 @@ async function handler(
         }
       };
     }
+    if (appId && customUid) {
+      // customUid 在 completions 中写入为 outLinkUid
+      return {
+        appId,
+        outLinkUid: customUid,
+        ...(source && { source: Array.isArray(source) ? { $in: source } : source })
+      };
+    }
     if (appId && teamId && teamToken) {
       const { uid } = await authTeamSpaceToken({ teamId, teamToken });
       return {
@@ -60,7 +69,7 @@ async function handler(
       return {
         tmbId,
         appId,
-        ...(source && { source })
+        ...(source && { source: Array.isArray(source) ? { $in: source } : source })
       };
     }
   })();

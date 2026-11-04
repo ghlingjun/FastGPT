@@ -33,6 +33,10 @@ NODE_OPTIONS=--no-node-snapshot pnpm i
 
 https://fael3z0zfze.feishu.cn/docx/ZOI1dABpxoGhS7xzhkXcKPxZnDL
 
+```sh
+pnpm run test tools.test.ts
+```
+
 ## I18N
 
 ### Install i18n-ally Plugin

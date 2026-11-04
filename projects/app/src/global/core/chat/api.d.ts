@@ -59,7 +59,8 @@ export type InitChatResponse = {
 /* ---------- history ----------- */
 export type GetHistoriesProps = OutLinkChatAuthProps & {
   appId?: string;
-  source?: `${ChatSourceEnum}`;
+  customUid?: string;
+  source?: `${ChatSourceEnum}` | `${ChatSourceEnum}`[];
 
   startCreateTime?: string;
   endCreateTime?: string;
