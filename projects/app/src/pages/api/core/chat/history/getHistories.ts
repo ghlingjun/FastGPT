@@ -48,6 +48,8 @@ export async function handler(
       };
     }
     if (appId && customUid) {
+      // customUid is persisted as outLinkUid when calling chat completions
+      await authCert({ req, authToken: true, authApiKey: true });
       return {
         appId,
         outLinkUid: customUid

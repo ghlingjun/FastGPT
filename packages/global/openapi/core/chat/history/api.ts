@@ -18,7 +18,7 @@ export type GetHistoriesBodyType = z.infer<typeof GetHistoriesBodySchema>;
 export const GetHistoriesResponseSchema = PaginationResponseSchema(
   z.object({
     chatId: z.string(),
-    customUid: z.string(),
+    customUid: z.string().optional(),
     updateTime: z.coerce.date(),
     appId: z.string(),
     customTitle: z.string().optional(),
