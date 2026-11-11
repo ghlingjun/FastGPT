@@ -50,7 +50,7 @@ export async function handler(
     if (appId && customUid) {
       return {
         appId,
-        customUid
+        outLinkUid: customUid
       };
     }
     if (appId && teamId && teamToken) {
@@ -116,7 +116,7 @@ export async function handler(
   const [data, total] = await Promise.all([
     await MongoChat.find(
       mergeMatch,
-      'chatId title top customTitle appId updateTime chatGenerateStatus hasBeenRead'
+      'chatId outLinkUid title top customTitle appId updateTime chatGenerateStatus hasBeenRead'
     )
       .sort({ top: -1, updateTime: -1 })
       .skip(offset)
@@ -128,6 +128,7 @@ export async function handler(
   return GetHistoriesResponseSchema.parse({
     list: data.map((item) => ({
       chatId: item.chatId,
+      customUid: item.outLinkUid,
       updateTime: item.updateTime,
       appId: item.appId,
       customTitle: item.customTitle,
